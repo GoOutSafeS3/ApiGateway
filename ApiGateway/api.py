@@ -1,5 +1,6 @@
 from flask import request, jsonify
-from errors import Error500, Error404, Error400
+
+import ApiGateway.clients.bookings as bookings
 
 ################ USERS ################################################
 
@@ -24,19 +25,23 @@ def get_user_contacts(user_id, begin=None, end=None):
 ################ BOOKINGS ################################################
 
 def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None):
-    pass
+    return bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
 
 def new_booking():
-    pass
+    req = request.json
+    return bookings.new_booking(user_id=req["user_id"], rest_id=req["rest_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
 
 def get_booking(booking_id):
-    pass
+    return bookings.get_a_booking(booking_id)
 
 def put_booking(booking_id, entrance=False):
-    pass
+    req = request.json
+    return bookings.edit_booking(booking_id=booking_id, number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"], entrance=entrance)
 
 def delete_booking(booking_id):
-    pass
+    return bookings.delete_booking(booking_id)
+
+################ NOTIFICATIONS ################################################
 
 def get_notifications(**kwargs):
     pass
@@ -49,6 +54,8 @@ def get_notification(notification_id):
 
 def edit_notification(notification_id, body):
     pass
+
+################ RESTAURANTS ################################################
 
 def get_restaurants(name=None, opening_time=None, open_day=None, cuisine_type=None, menu=None):
     pass
@@ -70,6 +77,8 @@ def get_restaurant_rating(restaurant_id):
 
 def post_restaurant_rating(restaurant_id):
     pass
+
+################ TABLES ################################################
 
 def get_restaurant_tables(restaurant_id):
     pass
