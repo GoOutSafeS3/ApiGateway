@@ -12,9 +12,19 @@ def _get(url):
         try:
             return r.json() ,r.status_code
         except:
-            return {}, r.status_code  
+            return {
+                   "type": "about:blank",
+                   "title": "Unexpected Error",
+                   "status": r.status_code ,
+                   "detail": "Unexpected error occurs",
+               }, r.status_code  
     except:
-        return {},500
+        return {
+                   "type": "about:blank",
+                   "title": "Internal Server Error",
+                   "status": 500 ,
+                   "detail": "Error during communication with other services",
+               },500
 
 def _post(url,json):
     """ Makes a post request with a timeout.
@@ -26,9 +36,19 @@ def _post(url,json):
         try:
             return r.json() ,r.status_code
         except:
-            return {}, r.status_code  
+            return {
+                   "type": "about:blank",
+                   "title": "Unexpected Error",
+                   "status": r.status_code ,
+                   "detail": "Unexpected error occurs",
+               }, r.status_code  
     except:
-        return {},500
+        return {
+                   "type": "about:blank",
+                   "title": "Internal Server Error",
+                   "status": 500 ,
+                   "detail": "Error during communication with other services",
+               },500
 
 def _put(url,json):
     """ Makes a put request with a timeout.
@@ -40,9 +60,19 @@ def _put(url,json):
         try:
             return r.json() ,r.status_code
         except:
-            return {}, r.status_code  
+            return {
+                   "type": "about:blank",
+                   "title": "Unexpected Error",
+                   "status": r.status_code ,
+                   "detail": "Unexpected error occurs",
+               }, r.status_code  
     except:
-        return {},500
+        return {
+                   "type": "about:blank",
+                   "title": "Internal Server Error",
+                   "status": 500 ,
+                   "detail": "Error during communication with other services",
+               },500
 
 def _delete(url):
     """ Makes a delete request with a timeout.
@@ -54,6 +84,16 @@ def _delete(url):
         try:
             return r.json() ,r.status_code
         except:
-            return {}, r.status_code  
+            return {
+                   "type": "about:blank",
+                   "title": "Unexpected Error",
+                   "status": r.status_code ,
+                   "detail": "Unexpected error occurs",
+               }, r.status_code  
     except:
-        return {},500
+        return {
+                   "type": "about:blank",
+                   "title": "Internal Server Error",
+                   "status": 500 ,
+                   "detail": "Error during communication with other services",
+               },500
