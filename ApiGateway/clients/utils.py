@@ -74,6 +74,30 @@ def _put(url,json):
                    "detail": "Error during communication with other services",
                },500
 
+def _patch(url,json):
+    """ Makes a patch request with a timeout.
+
+    Returns the json object if with the status code (or None, None in case of timeout).
+    """
+    try:
+        r = requests.patch(url, json=json, timeout=TIMEOUT)
+        try:
+            return r.json() ,r.status_code
+        except:
+            return {
+                   "type": "about:blank",
+                   "title": "Unexpected Error",
+                   "status": r.status_code ,
+                   "detail": "Unexpected error occurs",
+               }, r.status_code  
+    except:
+        return {
+                   "type": "about:blank",
+                   "title": "Internal Server Error",
+                   "status": 500 ,
+                   "detail": "Error during communication with other services",
+               },500
+
 def _delete(url):
     """ Makes a delete request with a timeout.
 
