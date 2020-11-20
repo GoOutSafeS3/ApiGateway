@@ -24,14 +24,14 @@ def get_user_contacts(user_id, begin=None, end=None):
 
 ################ BOOKINGS ################################################
 
-def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None):
+def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None, with_user=False):
     return bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
 
 def new_booking():
     req = request.json
     return bookings.new_booking(user_id=req["user_id"], rest_id=req["rest_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
 
-def get_booking(booking_id):
+def get_booking(booking_id, with_user=False):
     return bookings.get_a_booking(booking_id)
 
 def put_booking(booking_id, entrance=False):
