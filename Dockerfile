@@ -7,6 +7,6 @@ RUN pip3 install -r requirements.txt
 
 ENV PYTHONPATH=.
 ENV PYTHONUNBUFFERED=1
-EXPOSE 80
+EXPOSE 5000
 
 CMD python3 ApiGateway/app.py
