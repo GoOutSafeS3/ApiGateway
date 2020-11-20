@@ -1,6 +1,6 @@
 from ApiGateway.clients.utils import _get, _post, _delete, _put
 
-USER_SERVICE = "http://localhost:8081"
+USER_SERVICE = "http://users:8081"
 TIMEOUT = 1
 
 

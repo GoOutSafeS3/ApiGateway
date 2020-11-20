@@ -12,7 +12,7 @@ paths:
       tags:
       - Restaurants
       summary: get a list of restaurants
-      operationId: app.get_restaurants
+      operationId: api.get_restaurants
       parameters:
       - name: name
         in: query
@@ -67,7 +67,7 @@ paths:
       tags:
       - Restaurants
       summary: Post a restaurant
-      operationId: app.post_restaurants
+      operationId: api.post_restaurants
       requestBody:
         content:
           application/json:
@@ -91,7 +91,7 @@ paths:
       tags:
       - Restaurant
       summary: Get a single restaurant
-      operationId: app.get_restaurant
+      operationId: api.get_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -116,7 +116,7 @@ paths:
       tags:
       - Restaurant
       summary: Edit a restaurant
-      operationId: app.put_restaurant
+      operationId: api.put_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -152,7 +152,7 @@ paths:
       tags:
       - Restaurant
       summary: Delete a restaurant
-      operationId: app.delete_restaurant
+      operationId: api.delete_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -186,7 +186,7 @@ paths:
       tags:
       - Restaurant
       summary: Get restaurant rating
-      operationId: app.get_restaurant_rating
+      operationId: api.get_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -211,7 +211,7 @@ paths:
       tags:
       - Restaurant
       summary: Rate a restaurant
-      operationId: app.post_restaurant_rating
+      operationId: api.post_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -244,7 +244,7 @@ paths:
       tags:
       - Tables
       summary: Get restaurant tables
-      operationId: app.get_restaurant_tables
+      operationId: api.get_restaurant_tables
       parameters:
       - name: restaurant_id
         in: path
@@ -280,7 +280,7 @@ paths:
       tags:
       - Tables
       summary: Add a restaurant table
-      operationId: app.post_restaurant_table
+      operationId: api.post_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -317,7 +317,7 @@ paths:
       tags:
       - Table
       summary: Get restaurant table
-      operationId: app.get_restaurant_table
+      operationId: api.get_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -348,7 +348,7 @@ paths:
       tags:
       - Table
       summary: Edit a restaurant table
-      operationId: app.put_restaurant_table
+      operationId: api.put_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -390,7 +390,7 @@ paths:
       tags:
       - Table
       summary: Delete a restaurant table
-      operationId: app.delete_restaurant_table
+      operationId: api.delete_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -430,7 +430,7 @@ paths:
       tags:
       - Notifications
       summary: Performs a search on notifications
-      operationId: app.get_notifications
+      operationId: api.get_notifications
       parameters:
       - name: user_id
         in: query
@@ -457,7 +457,7 @@ paths:
       tags:
       - Notifications
       summary: Creates a new notification for a user
-      operationId: app.new_notification
+      operationId: api.new_notification
       requestBody:
         content:
           application/json:
@@ -484,7 +484,7 @@ paths:
       tags:
       - Notification
       summary: Get a single notification
-      operationId: app.get_notification
+      operationId: api.get_notification
       parameters:
       - name: notification_id
         in: path
@@ -506,7 +506,7 @@ paths:
       tags:
       - Notification
       summary: Edit a notification
-      operationId: app.edit_notification
+      operationId: api.edit_notification
       parameters:
       - name: notification_id
         in: path
@@ -537,7 +537,7 @@ paths:
       tags:
       - Bookings
       summary: Get all bookings
-      operationId: app.get_bookings
+      operationId: api.get_bookings
       parameters:
         - in: query
           name: user
@@ -605,7 +605,7 @@ paths:
       tags:
       - Bookings
       summary: Creates a new booking
-      operationId: app.new_booking
+      operationId: api.new_booking
       requestBody:
         required: true
         content:
@@ -644,7 +644,7 @@ paths:
       tags:
       - Booking
       summary: Get a single booking
-      operationId: app.get_booking
+      operationId: api.get_booking
       parameters:
       - name: booking_id
         in: path
@@ -677,7 +677,7 @@ paths:
       tags:
       - Booking
       summary: Edit a booking
-      operationId: app.put_booking
+      operationId: api.put_booking
       parameters:
       - name: booking_id
         in: path
@@ -734,7 +734,7 @@ paths:
       tags:
       - Booking
       summary: Delete a booking
-      operationId: app.delete_booking
+      operationId: api.delete_booking
       parameters:
       - name: booking_id
         in: path

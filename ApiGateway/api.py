@@ -26,6 +26,8 @@ def get_user_contacts(user_id, begin=None, end=None):
 ################ BOOKINGS ################################################
 
 def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None, with_user=False):
+    if with_user:
+        return get_bookings_with_user_data(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
     return bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
 
 def new_booking():
@@ -33,6 +35,8 @@ def new_booking():
     return bookings.new_booking(user_id=req["user_id"], rest_id=req["rest_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
 
 def get_booking(booking_id, with_user=False):
+    if with_user:
+        return get_booking_with_user_data(booking_id=booking_id)
     return bookings.get_a_booking(booking_id)
 
 def put_booking(booking_id, entrance=False):
@@ -43,29 +47,26 @@ def delete_booking(booking_id):
     return bookings.delete_booking(booking_id)
 
 def get_booking_with_user_data(booking_id):
-    booking = bookings.get_a_booking(booking_id)
-    if booking.status_code != 200:
-        return booking
-    booking = booking.json()
-    user = users.get_user(booking['user_id'])
-    if user.status_code != 200:
-        return user
-    user = user.json()
+    booking, booking_status_code = bookings.get_a_booking(booking_id)
+    if booking_status_code != 200:
+        return booking, booking_status_code
+    user,user_status_code = users.get_user(booking['user_id'])
+    if user_status_code != 200:
+        return user, user_status_code
     booking["user"] = user
-    return booking
+    return booking, booking_status_code
 
-def get_bookings_with_user_data():
-    bookings_list = bookings.get_bookings()
-    if bookings_list.status_code != 200:
-        return bookings_list
-    bookings_list = bookings_list.json()
+def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None):
+    bookings_list,bookings_status_code = bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
+    if bookings_status_code != 200:
+        return bookings_list,bookings_status_code
     for booking in bookings_list:
-        user = users.get_user(booking['user_id'])
-        if user.status_code != 200:
-            return user
-        user = user.json()
+        user,user_status_code = users.get_user(booking['user_id'])
+        if user_status_code != 200:
+            return user,user_status_code
         booking["user"] = user
-    return bookings
+
+    return bookings_list, bookings_status_code
 
 ################ NOTIFICATIONS ################################################
 

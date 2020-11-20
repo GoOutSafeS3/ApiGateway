@@ -83,3 +83,7 @@ if __name__ == "__main__":
     print(delete_booking(5),"\n")
     print(delete_booking(6),"\n")
     print(get_bookings(),"\n")
+
+    print(get_bookings(begin_entrance=datetime.datetime.now(), end_entrance=datetime.datetime.now()+datetime.timedelta(days=2)),"\n")
+    print(edit_booking(1,entrance=True))
+    print(get_bookings(begin_entrance=datetime.datetime.now(), end_entrance=datetime.datetime.now()+datetime.timedelta(days=2)),"\n")
