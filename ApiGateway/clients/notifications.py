@@ -1,18 +1,18 @@
 from datetime import datetime
-from ApiGateway.clients.utils import get, post, patch
+from ApiGateway.clients.utils import _get, _post, _patch
 import datetime
 
 NOTIFICATIONS_SERVICE = "http://notifications.local:8080/"
 
 def get_notification(id):
-    return get(f"{NOTIFICATIONS_SERVICE}/notifications/{id}")
+    return _get(f"{NOTIFICATIONS_SERVICE}/notifications/{id}")
 
 def get_notifications(user_id, read=None):
     url = f"{NOTIFICATIONS_SERVICE}/notifications?user_id={user_id}"
     if read is not None:
         url += f"&read={'true' if read else 'false'}"
 
-    return get(url)
+    return _get(url)
 
 def create_notification(user_id, content):
     data = {
@@ -21,11 +21,11 @@ def create_notification(user_id, content):
         "sent_on": datetime.now().isoformat()
     }
     url = f"{NOTIFICATIONS_SERVICE}/notifications"
-    return post(url, data)
+    return _post(url, data)
 
 def mark_notification_as_read(id):
     data = {
         "read_on": datetime.now().isoformat()
     }
     url = f"{NOTIFICATIONS_SERVICE}/notifications/{id}"
-    return patch(url, data)
+    return _patch(url, data)
