@@ -1,6 +1,7 @@
 from flask import request, jsonify
 
 import ApiGateway.clients.bookings as bookings
+import ApiGateway.clients.users as users
 
 ################ USERS ################################################
 
@@ -40,6 +41,31 @@ def put_booking(booking_id, entrance=False):
 
 def delete_booking(booking_id):
     return bookings.delete_booking(booking_id)
+
+def get_booking_with_user_data(booking_id):
+    booking = bookings.get_a_booking(booking_id)
+    if booking.status_code != 200:
+        return booking
+    booking = booking.json()
+    user = users.get_user(booking['user_id'])
+    if user.status_code != 200:
+        return user
+    user = user.json()
+    booking["user"] = user
+    return booking
+
+def get_bookings_with_user_data():
+    bookings_list = bookings.get_bookings()
+    if bookings_list.status_code != 200:
+        return bookings_list
+    bookings_list = bookings_list.json()
+    for booking in bookings_list:
+        user = users.get_user(booking['user_id'])
+        if user.status_code != 200:
+            return user
+        user = user.json()
+        booking["user"] = user
+    return bookings
 
 ################ NOTIFICATIONS ################################################
 
