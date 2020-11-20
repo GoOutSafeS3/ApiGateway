@@ -1,0 +1,1397 @@
+openapi: 3.0.1
+info:
+  title: Users microservice REST API
+  description: Users from GoOutSafe with Microservices
+  version: "0.1"
+servers:
+- url: /
+
+paths:
+  /restaurants:
+    get:
+      tags:
+      - Restaurants
+      summary: get a list of restaurants
+      operationId: api.get_restaurants
+      parameters:
+      - name: name
+        in: query
+        description: Restaurant name
+        required: false
+        schema:
+          type: string
+      - name: opening_time
+        in: query
+        description: Open at
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 23
+      - name: open_day
+        in: query
+        description: Open on
+        required: false
+        schema:
+          type: integer
+          minimum: 1 # monday
+          maximum: 7 # sunday
+      - name: cuisine_type
+        in: query
+        description: Cuisine type
+        required: false
+        schema:
+          type: string
+      - name: menu
+        in: query
+        description: Restaurant menu
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Restaurants found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Restaurant'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Restaurants
+      summary: Post a restaurant
+      operationId: api.post_restaurants
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restaurant'
+      responses:
+        201:
+          description: Restaurant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /restaurants/{restaurant_id}:
+    get:
+      tags:
+      - Restaurant
+      summary: Get a single restaurant
+      operationId: api.get_restaurant
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return restaurant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Restaurant
+      summary: Edit a restaurant
+      operationId: api.put_restaurant
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restaurant'
+      responses:
+        200:
+          description: Restaurant edited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Restaurant
+      summary: Delete a restaurant
+      operationId: api.delete_restaurant
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: force
+        in: query
+        description: Try to delete future reservations, disabled for now
+        required: false
+        schema:
+          type: boolean
+      responses:
+        204:
+          description: Restaurant deleted
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: The restaurant has pending reservations, those must be deleted first, try using the force parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /restaurants/{restaurant_id}/rate:
+    get:
+      tags:
+      - Restaurant
+      summary: Get restaurant rating
+      operationId: api.get_restaurant_rating
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return restaurant rating
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Restaurant
+      summary: Rate a restaurant
+      operationId: api.post_restaurant_rating
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+      responses:
+        202:
+          description: Rating created (rating of the restaurant not updated for now)
+        400:
+          description: Bad request or Restaurant already rated by the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /restaurants/{restaurant_id}/tables:
+    get:
+      tags:
+      - Tables
+      summary: Get restaurant tables
+      operationId: api.get_restaurant_tables
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: capacity
+        in: query
+        description: Capacity required
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Return restaurant tables
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Table'
+        204:
+          description: No adequate table
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Tables
+      summary: Add a restaurant table
+      operationId: api.post_restaurant_table
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Table'
+      responses:
+        201:
+          description: Table created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Restaurant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /restaurants/{restaurant_id}/tables/{table_id}:
+    get:
+      tags:
+      - Table
+      summary: Get restaurant table
+      operationId: api.get_restaurant_table
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        description: Table's Unique identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return restaurant table
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'
+        404:
+          description: Restaurant or Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Table
+      summary: Edit a restaurant table
+      operationId: api.put_restaurant_table
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        description: Table's Unique identifier
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Table'
+      responses:
+        200:
+          description: Table edited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Table'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: Restaurant or Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Table
+      summary: Delete a restaurant table
+      operationId: api.delete_restaurant_table
+      parameters:
+      - name: restaurant_id
+        in: path
+        description: Restaurant's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        description: Table's Unique identifier
+        required: true
+        schema:
+          type: integer
+      - name: force
+        in: query
+        description: try to delete future reservations, disabled for now
+        required: false
+        schema:
+          type: boolean
+      responses:
+        204:
+          description: Table deleted
+        404:
+          description: Restaurant or Table does not exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: The table has pending reservations, those must be deleted first, try using the force parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /notifications:
+    get:
+      tags:
+      - Notifications
+      summary: Performs a search on notifications
+      operationId: api.get_notifications
+      parameters:
+      - name: user_id
+        in: query
+        description: User's unique identifier
+        required: false
+        schema:
+          type: integer
+      - name: read
+        in: query
+        description: Whether to retrieve only read notifications or unread
+        required: false
+        schema:
+          type: boolean
+      responses:
+        200:
+          description: Return all notifications that match parameters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+    post:
+      tags:
+      - Notifications
+      summary: Creates a new notification for a user
+      operationId: api.new_notification
+      requestBody:
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/NewNotification'
+
+      responses:
+        201:
+          description: Notification created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        400:
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /notifications/{notification_id}:
+    get:
+      tags:
+      - Notification
+      summary: Get a single notification
+      operationId: api.get_notification
+      parameters:
+      - name: notification_id
+        in: path
+        description: Notification's unique identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return notification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        404:
+          description: Notification does not exist
+          content: {}
+    patch:
+      tags:
+      - Notification
+      summary: Edit a notification
+      operationId: api.edit_notification
+      parameters:
+      - name: notification_id
+        in: path
+        description: Notification's unique identifier
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditNotification'
+      responses:
+        200:
+          description: Notification edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditNotification'
+        400:
+          description: Invalid sent_on value
+          content: {}
+        404:
+          description: Notification does not exist
+          content: {}
+  /bookings: ################################# /BOOKINGS #######################################
+    get: ########################## GET ALL BOOKINGS
+      tags:
+      - Bookings
+      summary: Get all bookings
+      operationId: api.get_bookings
+      parameters:
+        - in: query
+          name: user
+          schema:
+            type: integer
+          description: The User Unique Identifier
+        - in: query
+          name: rest
+          schema:
+            type: integer
+          description: The Restaurant Unique Identifier
+        - in: query
+          name: table
+          schema:
+            type: integer
+          description: The Table Unique Identifier
+        - in: query
+          name: begin
+          schema:
+            type: string
+            format: date-time
+          description: The beginning of the research period
+        - in: query
+          name: end
+          schema:
+            type: string
+            format: date-time
+          description: The end of the research period
+        - in: query
+          name: begin_entrance
+          schema:
+            type: string
+            format: date-time
+          description: The beginning of the research period (for the entrance time)
+        - in: query
+          name: end_entrance
+          schema:
+            type: string
+            format: date-time
+          description: The end of the research period ( for the entrance time)
+      responses:
+        200:
+          description: Return all bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+    post: ########################## CREATE A NEW BOOKING
+      tags:
+      - Bookings
+      summary: Creates a new booking
+      operationId: api.new_booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+              schema:
+                $ref: '#/components/schemas/NewBooking'
+      responses:
+        201:
+          description: Booking created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Impossible to make the requested booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /bookings/{booking_id}: ################################# /BOOKINGS/ID #######################################
+    get: ########################## GET A BOOKING
+      tags:
+      - Booking
+      summary: Get a single booking
+      operationId: api.get_booking
+      parameters:
+      - name: booking_id
+        in: path
+        description: Booking's Unique Identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        404:
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+    put: ########################## EDIT A BOOKING
+      tags:
+      - Booking
+      summary: Edit a booking
+      operationId: api.put_booking
+      parameters:
+      - name: booking_id
+        in: path
+        description: Booking's Unique Identifier
+        required: true
+        schema:
+          type: integer
+      - in: query
+        name: entrance
+        schema:
+          type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditBooking'
+      responses:
+        200:
+          description: Booking edited successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+        409:
+          description: Impossible to edit the requested booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+        404:
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+    delete: ########################## DELETE A BOOKING
+      tags:
+      - Booking
+      summary: Delete a booking
+      operationId: api.delete_booking
+      parameters:
+      - name: booking_id
+        in: path
+        description: Booking's Unique Identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        204:
+          description: Booking deleted successfully
+          
+        403:
+          description: Impossible to delete the booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          
+        404:
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /users/{user_id}/contacts:
+    get:
+      tags:
+      - Users
+      summary: Get the User contacts, from the begin date to the end date
+      operationId: api.get_user_contacts
+      parameters:
+      - in: path
+        name: user_id
+        description: User's unique identifier
+        required: true
+        schema:
+          type: integer
+      - in: query
+        name: begin
+        description: The beginning of the research period
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: end
+        schema:
+          type: string
+          format: date-time
+        description: The end of the research period
+      responses:
+        200:
+          description: Return all contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Get the Users
+      operationId: api.get_users
+      parameters:
+      - in: query
+        name: ssn
+        description: User's SSN identifier
+        schema:
+          type: string
+      - in: query
+        name: email
+        description: User's email
+        schema:
+          type: string
+      - in: query
+        name: phone
+        description: User's phone number
+        schema:
+          type: string
+      - in: query
+        name: is_positive
+        description: Boolean equals true if the user is positive
+        schema:
+          type: string
+      responses:
+        200:
+          description: Return all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Users
+      summary: Create new user
+      operationId: api.create_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        201:
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Impossible to create the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Server error (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /users/{user_id}:
+    get:
+      tags:
+      - User
+      summary: get the user
+      operationId: api.get_id_user
+      parameters:
+      - in: path
+        name: user_id
+        description: User's unique identifier
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Return user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - User
+      summary: Edit a user
+      operationId: api.edit_user
+      parameters:
+        - in: path
+          name: user_id
+          description: User's unique identifier
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: User edited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Impossible to edit the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+            description: Server error (try again)
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - User
+      summary: Delete a user
+      operationId: api.delete_user
+      parameters:
+        - in: path
+          name: user_id
+          description: User's unique identifier
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: User deleted successfully
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        404:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Server error (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+components:
+  schemas:
+    EditBooking:
+      type: object
+      properties:
+        number_of_people:
+          type: integer
+          description: The booking's number of people 
+          nullable: true
+          minimum: 1
+          example: 4
+        booking_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          description: For when is the booking
+          example: "2020-11-10T10:30:00+1:00"
+        
+    NewBooking:
+      type: object
+      allOf:     # Combines the BasicErrorModel and the inline model
+        - $ref: '#/components/schemas/EditBooking'
+        - type: object
+          required:
+            - number_of_people
+            - booking_datetime
+      properties:
+        user_id:
+          type: integer
+          description: The Unique Identifier of the user who made the booking
+          example: 123
+        restaurant_id:
+          type: integer
+          description: The Unique Identifier of the restaurant
+          example: 21
+      required:
+        - user_id
+        - restaurant_id
+        
+    Booking:
+      type: object
+      allOf:     # Combines the BasicErrorModel and the inline model
+        - $ref: '#/components/schemas/NewBooking'
+        - type: object
+      properties:
+        url:
+          type: string
+          description: Booking location
+          readOnly: true
+          example: /bookings/42
+        datetime:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the booking was created
+          example: "2020-11-10T10:30:00+1:00"
+        id:
+          type: integer
+          description: Booking Unique Identifier
+          readOnly: true
+          example: 42
+        table_id:
+          type: integer
+          description: The Unique Identifier of the table reserved
+          readOnly: true
+          example: 11
+        entrance_datetime:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the user actually entered the restaurant
+          example: "2020-11-10T10:30:00+1:00"
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Error type
+          example: about:blank
+        title:
+          type: string
+          description: Error name
+          example: Bad Request
+        status:
+          type: integer
+          description: Error status code
+          example: about:blank
+        detail:
+          type: string
+          description: Error description
+          example: None is not of type 'string'
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - firstname
+        - lastname
+        - phone
+        - dateofbirth
+        - password
+      properties:
+        id:
+          type: integer
+          description: Unique User's identifier
+          readOnly: true
+          example: 122
+        rest_id:
+          type: integer
+          description: Restaurant's identifier
+          example: 122
+        email:
+          maxLength: 50
+          minLength: 5
+          type: string
+          description: User's email
+          example: "Anna@example.com"
+        firstname:
+          maxLength: 100
+          minLength: 3
+          type: string
+          description: User's firstname
+          example: "Anna"
+        lastname:
+          maxLength: 100
+          minLength: 3
+          type: string
+          description: User's lastname
+          example: "Verdi"
+        password:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: User's password
+          example: "xxx"
+        password_repeat:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: User's password
+          example: "xxx"
+        old_password:
+          maxLength: 20
+          minLength: 3
+          type: string
+          description: User's old password (to confirm the editing of the user)
+          example: "xxx"
+        phone:
+          type: string
+          description:  User's telephone number
+          example: "397673154"
+        dateofbirth:
+          type: string
+          format: date-time
+          description: User's date of birth
+          example: "1960-11-10T10:30:00+1:00"
+        ssn:
+          maxLength: 16
+          minLength: 16
+          type: string
+          description: Unique User's identifier
+          example: "VRDNNAC5H58H762R"
+        is_operator:
+          example: false
+          type: boolean
+        is_positive:
+          type: boolean
+          example: false
+        is_health_authority:
+          example: false
+          type: boolean
+        is_active:
+          example: false
+          type: boolean
+        is_admin:
+          example: false
+          type: boolean
+        is_anonymous:
+          example: false
+          type: boolean
+        positive_datetime:
+          type: string
+          format: date-time
+          description: When the user was marked as positive
+          example: "2020-11-10T10:30:00+1:00"
+    NotificationBase:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Resource location
+          example: "/notifications/123"
+          readOnly: true
+    NewNotification:
+      allOf:
+        - $ref: '#/components/schemas/NotificationBase'
+        - type: object
+          required:
+          - user_id
+          - sent_on
+          - content
+          properties:
+            user_id:
+              type: integer
+              description: Recipient's id
+              example: 345
+            sent_on:
+              type: string
+              format: date-time
+              description: When the notification was sent
+              example: "2020-11-16T20:08:39.128358"
+            content:
+              type: string
+              description: Notification's contents
+              example: "Your order at restaurant 'Foobar' has been canceled"
+            read_on:
+              type: string
+              format: date-time
+              description: If present, describes the time when the notification has been read by the recipient
+              example: "2020-11-16T20:08:39.128358"
+    EditNotification:
+      allOf:
+        - $ref: '#/components/schemas/NotificationBase'
+        - type: object
+          required:
+          - read_on
+          properties:
+            read_on:
+              type: string
+              format: date-time
+              description: If present, describes the time when the notification has been read by the recipient
+              example: "2020-11-16T20:08:39.128358"
+    Notification:
+      allOf:
+        - $ref: '#/components/schemas/NotificationBase'
+        - type: object
+          properties:
+            user_id:
+              type: integer
+              description: Recipient's id
+              example: 345
+            sent_on:
+              type: string
+              format: date-time
+              description: When the notification was sent
+              example: "2020-11-16T20:08:39.128358"
+            content:
+              type: string
+              description: Notification's contents
+              example: "Your order at restaurant 'Foobar' has been canceled"
+            read_on:
+              type: string
+              format: date-time
+              description: If present, describes the time when the notification has been read by the recipient
+              example: "2020-11-16T20:08:39.128358"
+    Restaurant:
+      required:
+      - name
+      - lat
+      - lon
+      - phone
+      - first_opening_hour
+      - first_closing_hour
+      - second_opening_hour
+      - second_closing_hour
+      - occupation_time
+      - cuisine_type
+      - menu
+      - closed_days
+      type: object
+      properties:
+        url:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: url of the restaurant
+          readOnly: true
+          example: /restaurants/123
+        id:
+          type: integer
+          description: Unique identifier
+          readOnly: true
+          example: 123
+        rating_val:
+          type: number
+          readOnly: true
+          minimum: 0
+          maximum: 5
+          example: 3.4
+        rating_num:
+          type: integer
+          readOnly: true
+          minimum: 0
+          example: 123
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: Restaurant's name
+          example: "My Pizza Restaurant"
+        lat:
+          type: number
+          description: Restaurant Latitude
+          example: 42.42
+        lon:
+          type: number
+          description: Restaurant Longitude
+          example: 42.42
+        phone:
+          type: string
+          minLength: 5
+          maxLength: 50
+          description: Restaurant Phone Number
+          example: "050123456"
+        first_opening_hour:
+          type: integer
+          description: First opening hour (first submitable booking time)
+          nullable: true
+          minimum: 0
+          maximum: 23
+          example: 12
+        first_closing_hour:
+          type: integer
+          description: First closing hour (last submitable booking time)
+          nullable: true
+          minimum: 0
+          maximum: 23
+          example: 15
+        second_opening_hour:
+          type: integer
+          description: Second opening hour (if available)
+          nullable: true
+          minimum: 0
+          maximum: 23
+          example: Null
+        second_closing_hour:
+          type: integer
+          description: Second closing hour (if available)
+          nullable: true
+          minimum: 0
+          maximum: 23
+          example: Null
+        occupation_time:
+          type: integer
+          description: Time for a table to be clear again
+          minimum: 1
+          maximum: 24
+        cuisine_type:
+          type: string
+          description: Cousine type
+        menu:
+          type: string
+          description: Restaurant menu
+        closed_days:
+          type: array
+          items:
+            type: integer
+            minimum: 1 # monday
+            maximum: 7 # sunday
+          minItems: 0
+          maxItems: 7
+    Rating:
+      required:
+      - user_id
+      - value
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: User unique identifier
+          writeOnly: true
+        value:
+          type: number
+          description: Mean rating
+          minimum: 0
+          maximum: 5
+        ratings:
+          type: integer
+          description: Number of ratings
+          readOnly: true
+          minimum: 0
+    Table:
+      required:
+        - capacity
+      type: object
+      properties:
+        url:
+          maxLength: 100
+          minLength: 1
+          type: string
+          description: url of the table
+          readOnly: true
+          example: /restaurants/123
+        id:
+          type: integer
+          description: Unique identifier
+          readOnly: true
+          example: 123
+        capacity:
+          type: integer
+          description: Table capacity
+          minimum: 1

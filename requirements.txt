@@ -1,0 +1,8 @@
+connexion[swagger-ui]
+flask
+flask-sqlalchemy
+pytest
+coverage
+requests_mock
+pytest-cov
+requests
