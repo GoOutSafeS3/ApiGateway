@@ -11,7 +11,8 @@ def get_users(ssn=None, phone=None, email=None, is_positive=None):
     return users.get_users(ssn=ssn,phone=phone,email=email,is_positive=is_positive)
 
 
-def create_user(dict_user):
+def create_user():
+    dict_user = request.json
     return users.create_user(dict_user)
 
 
@@ -19,7 +20,8 @@ def get_id_user(user_id):
     return users.get_user(user_id)
 
 
-def edit_user(user_id, dict_user):
+def edit_user(user_id):
+    dict_user = request.json
     return users.edit_user(user_id,dict_user)
 
 
@@ -104,7 +106,7 @@ def get_notification(notification_id):
     #return notifications.get_notification(notification_id)
 
 
-def mark_notification_as_read(notification_id):
+def edit_notification(notification_id):
     pass
     #return notifications.mark_notification_as_read(id=notification_id)
 
