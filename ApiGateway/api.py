@@ -108,10 +108,10 @@ def mark_notification_as_read(notification_id):
     pass
     #return notifications.mark_notification_as_read(id=notification_id)
 
+def edit_notification(notification_id, body):
+    pass
 
-################ RESTAURANTS ################################################
-
-def get_restaurants(name=None, opening_time=None, open_day=None, cuisine_type=None, menu=None):
+################ RESTAURANTS #########################pening_time=None, open_day=None, cuisine_type=None, menu=None):
     pass
 
 def post_restaurants():
