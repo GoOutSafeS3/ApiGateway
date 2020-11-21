@@ -1,6 +1,9 @@
 import connexion
 import logging
 
+import sys
+sys.path.append("./ApiGateway/")
+
 def create_app():
     logging.basicConfig(level=logging.INFO)
     app = connexion.App(__name__)
