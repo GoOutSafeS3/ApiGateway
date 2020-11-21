@@ -5,23 +5,30 @@ import ApiGateway.clients.users as users
 
 ################ USERS ################################################
 
-def get_users(ssn=None, phone=None, email=None, is_positive=None):
-    pass
 
-def create_user():
-    pass
+def get_users(ssn=None, phone=None, email=None, is_positive=None):
+    return users.get_users(ssn=ssn,phone=phone,email=email,is_positive=is_positive)
+
+
+def create_user(dict_user):
+    return users.create_user(dict_user)
+
 
 def get_id_user(user_id):
-    pass
+    return users.get_user(user_id)
 
-def edit_user(user_id):
-    pass
+
+def edit_user(user_id, dict_user):
+    return users.edit_user(user_id,dict_user)
+
 
 def delete_user(user_id):
-    pass
+    return users.delete_user(user_id)
+
 
 def get_user_contacts(user_id, begin=None, end=None):
-    pass
+    return users.get_user_contacts(user_id, begin=begin, end=end)
+
 
 ################ BOOKINGS ################################################
 
