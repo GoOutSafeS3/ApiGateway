@@ -98,5 +98,5 @@ class UsersTest(unittest.TestCase):
         client = self.app.test_client()
         response = client.get('users/1/contacts')
         self.assertEqual(response.status_code, 200)
-        
+
     # Aggiungere test sulla delete appena pronte api su ristoranti
