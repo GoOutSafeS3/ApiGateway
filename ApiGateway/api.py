@@ -2,8 +2,10 @@ from flask import request, jsonify
 
 import ApiGateway.clients.bookings as bookings
 import ApiGateway.clients.users as users
+import ApiGateway.clients.notifications as notifications
 
 ################ USERS ################################################
+
 
 def get_users(ssn=None, phone=None, email=None, is_positive=None):
     return users.get_users(ssn=ssn,phone=phone,email=email,is_positive=is_positive)
@@ -30,26 +32,32 @@ def get_user_contacts(user_id, begin=None, end=None):
 
 ################ BOOKINGS ################################################
 
+
 def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None, with_user=False):
     if with_user:
         return get_bookings_with_user_data(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
     return bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
 
+
 def new_booking():
     req = request.json
     return bookings.new_booking(user_id=req["user_id"], rest_id=req["restaurant_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
+
 
 def get_booking(booking_id, with_user=False):
     if with_user:
         return get_booking_with_user_data(booking_id=booking_id)
     return bookings.get_a_booking(booking_id)
 
+
 def put_booking(booking_id, entrance=False):
     req = request.json
     return bookings.edit_booking(booking_id=booking_id, number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"], entrance=entrance)
 
+
 def delete_booking(booking_id):
     return bookings.delete_booking(booking_id)
+
 
 def get_booking_with_user_data(booking_id):
     booking, booking_status_code = bookings.get_a_booking(booking_id)
@@ -60,6 +68,7 @@ def get_booking_with_user_data(booking_id):
         return user, user_status_code
     booking["user"] = user
     return booking, booking_status_code
+
 
 def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None):
     bookings_list,bookings_status_code = bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
@@ -75,17 +84,22 @@ def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, en
 
 ################ NOTIFICATIONS ################################################
 
-def get_notifications(**kwargs):
-    pass
 
-def new_notification(body):
-    pass
+def get_notifications(user_id, read=None):
+    return notifications.get_notifications(user_id,read=read)
+
+
+def new_notification(user_id, body):
+    return notifications.create_notification(user_id, body)
+
 
 def get_notification(notification_id):
-    pass
+    return notifications.get_notification(notification_id)
 
-def edit_notification(notification_id, body):
-    pass
+
+def mark_notification_as_read(notification_id):
+    return notifications.mark_notification_as_read(id=notification_id)
+
 
 ################ RESTAURANTS ################################################
 
