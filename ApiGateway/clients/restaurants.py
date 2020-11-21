@@ -33,53 +33,51 @@ def get_restaurants(name=None, opening_time=None, open_day=None, cuisine_type=No
 
 def post_restaurants(json):
     url = RESTAURANTS_SERVICE + '/restaurants'
-    return _post(url=url, json=json)
+    return _post(url, json=json)
 
 def get_restaurant(restaurant_id):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d'%restaurant_id
-    return _get(url=url)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d'%restaurant_id)
+    return _get(url)
 
 def put_restaurant(restaurant_id, json):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d'%restaurant_id
-    return _put(url=url, json=json)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d'%restaurant_id)
+    return _put(url, json=json)
 
 def delete_restaurant(restaurant_id):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d'%restaurant_id
-    return _delete(url=url)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d'%restaurant_id)
+    return _delete(url)
 
 def get_restaurant_rating(restaurant_id):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d.rate'%restaurant_id
-    return _get(url=url)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/rate'%restaurant_id)
+    return _get(url)
 
 def post_restaurant_rating(restaurant_id,json):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/rate'%restaurant_id
-    return _post(url=url, json=json)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/rate'%restaurant_id)
+    return _post(url, json=json)
 
-def get_restaurant_tables(restaurant_id, json, capacity=None):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/tables?'%restaurant_id
+def get_restaurant_tables(restaurant_id, capacity=None):
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/tables?'%restaurant_id)
+
     if capacity is not None:
-        url += "capacity="+str(capacity)+"&"
-
-    if url[-1] == "&":
-        url = url[:-1]
+        url += "capacity="+str(capacity)
 
     if url[-1] == "?":
         url = url[:-1]
 
-    return _get(url=url, json=json)
+    return _get(url)
 
 def post_restaurant_table(restaurant_id, json):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/tables'%restaurant_id
-    return _post(url=url, json=json)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/tables'%restaurant_id)
+    return _post(url, json=json)
 
 def get_restaurant_table(restaurant_id, table_id):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/tables/%d'%(restaurant_id,table_id)
-    return _get(url=url)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/tables/%d'%(restaurant_id,table_id))
+    return _get(url)
 
 def put_restaurant_table(restaurant_id, table_id, json):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/tables/%d'%(restaurant_id,table_id)
-    return _put(url=url, json=json)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/tables/%d'%(restaurant_id,table_id))
+    return _put(url, json=json)
 
 def delete_restaurant_table(restaurant_id, table_id):
-    url = RESTAURANTS_SERVICE + '/restaurants/%d/tables/%d'%(restaurant_id,table_id)
-    return _delete(url=url)
+    url = RESTAURANTS_SERVICE + ('/restaurants/%d/tables/%d'%(restaurant_id,table_id))
+    return _delete(url)

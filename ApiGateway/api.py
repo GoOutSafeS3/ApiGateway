@@ -136,7 +136,7 @@ def get_restaurant_rating(restaurant_id):
 
 def post_restaurant_rating(restaurant_id):
     json = request.json
-    return restaurants.post_restaurant(restaurant_id,json)
+    return restaurants.post_restaurant_rating(restaurant_id,json)
 
 ################ TABLES ################################################
 
