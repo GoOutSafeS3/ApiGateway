@@ -32,7 +32,7 @@ def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_e
 
 def new_booking():
     req = request.json
-    return bookings.new_booking(user_id=req["user_id"], rest_id=req["rest_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
+    return bookings.new_booking(user_id=req["user_id"], rest_id=req["restaurant_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
 
 def get_booking(booking_id, with_user=False):
     if with_user:
