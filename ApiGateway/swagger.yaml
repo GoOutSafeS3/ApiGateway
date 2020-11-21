@@ -12,7 +12,7 @@ paths:
       tags:
       - Restaurants
       summary: get a list of restaurants
-      operationId: api.get_restaurants
+      operationId: app.get_restaurants
       parameters:
       - name: name
         in: query
@@ -67,7 +67,7 @@ paths:
       tags:
       - Restaurants
       summary: Post a restaurant
-      operationId: api.post_restaurants
+      operationId: app.post_restaurants
       requestBody:
         content:
           application/json:
@@ -86,12 +86,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /restaurants/{restaurant_id}:
     get:
       tags:
-      - Restaurant
+      - Restaurants
       summary: Get a single restaurant
-      operationId: api.get_restaurant
+      operationId: app.get_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -114,9 +120,9 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       tags:
-      - Restaurant
+      - Restaurants
       summary: Edit a restaurant
-      operationId: api.put_restaurant
+      operationId: app.put_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -148,11 +154,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        409:
+          description: The restaurant has pending reservations tha conflict with the new openings, those must be deleted first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
-      - Restaurant
+      - Restaurants
       summary: Delete a restaurant
-      operationId: api.delete_restaurant
+      operationId: app.delete_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -160,12 +178,6 @@ paths:
         required: true
         schema:
           type: integer
-      - name: force
-        in: query
-        description: Try to delete future reservations, disabled for now
-        required: false
-        schema:
-          type: boolean
       responses:
         204:
           description: Restaurant deleted
@@ -176,7 +188,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         409:
-          description: The restaurant has pending reservations, those must be deleted first, try using the force parameter
+          description: The restaurant has pending reservations, those must be deleted first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
           content:
             application/json:
               schema:
@@ -184,9 +202,9 @@ paths:
   /restaurants/{restaurant_id}/rate:
     get:
       tags:
-      - Restaurant
+      - Restaurants
       summary: Get restaurant rating
-      operationId: api.get_restaurant_rating
+      operationId: app.get_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -209,9 +227,9 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       tags:
-      - Restaurant
+      - Restaurants
       summary: Rate a restaurant
-      operationId: api.post_restaurant_rating
+      operationId: app.post_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -239,12 +257,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /restaurants/{restaurant_id}/tables:
     get:
       tags:
-      - Tables
+      - Restaurants
       summary: Get restaurant tables
-      operationId: api.get_restaurant_tables
+      operationId: app.get_restaurant_tables
       parameters:
       - name: restaurant_id
         in: path
@@ -278,9 +302,9 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       tags:
-      - Tables
+      - Restaurants
       summary: Add a restaurant table
-      operationId: api.post_restaurant_table
+      operationId: app.post_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -312,12 +336,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /restaurants/{restaurant_id}/tables/{table_id}:
     get:
       tags:
-      - Table
+      - Restaurants
       summary: Get restaurant table
-      operationId: api.get_restaurant_table
+      operationId: app.get_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -346,9 +376,9 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       tags:
-      - Table
+      - Restaurants
       summary: Edit a restaurant table
-      operationId: api.put_restaurant_table
+      operationId: app.put_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -386,11 +416,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        409:
+          description: The table has pending reservations tha conflict with the new capacity, those must be deleted first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
-      - Table
+      - Restaurants
       summary: Delete a restaurant table
-      operationId: api.delete_restaurant_table
+      operationId: app.delete_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -404,12 +446,6 @@ paths:
         required: true
         schema:
           type: integer
-      - name: force
-        in: query
-        description: try to delete future reservations, disabled for now
-        required: false
-        schema:
-          type: boolean
       responses:
         204:
           description: Table deleted
@@ -420,11 +456,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         409:
-          description: The table has pending reservations, those must be deleted first, try using the force parameter
+          description: The table has pending reservations, those must be deleted first
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /notifications:
     get:
       tags:
@@ -1380,15 +1423,15 @@ components:
           maxItems: 7
     Rating:
       required:
-      - user_id
-      - value
+      - rater_id
+      - rating
       type: object
       properties:
-        user_id:
+        rater_id:
           type: integer
           description: User unique identifier
           writeOnly: true
-        value:
+        rating:
           type: number
           description: Mean rating
           minimum: 0
@@ -1409,8 +1452,13 @@ components:
           type: string
           description: url of the table
           readOnly: true
-          example: /restaurants/123
+          example: /restaurants/123/tables/123
         id:
+          type: integer
+          description: Unique identifier
+          readOnly: true
+          example: 123
+        restaurant_id:
           type: integer
           description: Unique identifier
           readOnly: true
