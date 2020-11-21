@@ -1,3 +1,4 @@
+from datetime import date
 from os import SEEK_CUR
 import unittest 
 import datetime
@@ -33,6 +34,21 @@ class BookingsTests(unittest.TestCase):
         js = response.get_json()
         self.assertEqual(response.status_code,200,msg=js)
         self.assertEqual(len(js),6,msg=js)
+
+        start = (datetime.datetime.now() - datetime.timedelta(days=7)).isoformat()
+        end = (datetime.datetime.now() + datetime.timedelta(days=7)).isoformat()
+
+        response = client.put('/bookings/1?entrance=true',json={})
+
+        response = client.get('/bookings?'+"begin_entrance="+start+"&end_entrance="+end)
+        js = response.get_json()
+        self.assertEqual(response.status_code,200,msg=js)
+        self.assertEqual(len(js),1,msg=js)
+
+        response = client.get('/bookings?user=2&rest=2&table=2&begin='+start+"&end="+end)
+        js = response.get_json()
+        self.assertEqual(response.status_code,200,msg=js)
+        self.assertEqual(len(js),2,msg=js)
 
     def test_get_booking(self):
         client = self.app.test_client()
@@ -94,3 +110,10 @@ class BookingsTests(unittest.TestCase):
         
         response = client.get('/bookings/'+str(js["id"]))
         self.assertEqual(response.status_code,404,msg="url="+'/bookings/'+str(js["id"])+"\n"+response.get_data(as_text=True))
+
+    def test_booking_set_entrance(self):
+        client = self.app.test_client()
+
+        response = client.put('/bookings/1?entrance=true',json={})
+        js1 = response.get_json()
+        self.assertEqual(response.status_code,200,msg=js1)

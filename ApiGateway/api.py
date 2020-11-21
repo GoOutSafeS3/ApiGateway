@@ -46,6 +46,10 @@ def get_booking(booking_id, with_user=False):
 
 def put_booking(booking_id, entrance=False):
     req = request.json
+    if "number_of_people" not in req:
+        req["number_of_people"] = None
+    if "booking_datetime" not in req:
+        req["booking_datetime"] = None
     return bookings.edit_booking(booking_id=booking_id, number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"], entrance=entrance)
 
 def delete_booking(booking_id):
