@@ -12,7 +12,7 @@ paths:
       tags:
       - Restaurants
       summary: get a list of restaurants
-      operationId: app.get_restaurants
+      operationId: api.get_restaurants
       parameters:
       - name: name
         in: query
@@ -67,7 +67,7 @@ paths:
       tags:
       - Restaurants
       summary: Post a restaurant
-      operationId: app.post_restaurants
+      operationId: api.post_restaurants
       requestBody:
         content:
           application/json:
@@ -97,7 +97,7 @@ paths:
       tags:
       - Restaurants
       summary: Get a single restaurant
-      operationId: app.get_restaurant
+      operationId: api.get_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -122,7 +122,7 @@ paths:
       tags:
       - Restaurants
       summary: Edit a restaurant
-      operationId: app.put_restaurant
+      operationId: api.put_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -170,7 +170,7 @@ paths:
       tags:
       - Restaurants
       summary: Delete a restaurant
-      operationId: app.delete_restaurant
+      operationId: api.delete_restaurant
       parameters:
       - name: restaurant_id
         in: path
@@ -204,7 +204,7 @@ paths:
       tags:
       - Restaurants
       summary: Get restaurant rating
-      operationId: app.get_restaurant_rating
+      operationId: api.get_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -229,7 +229,7 @@ paths:
       tags:
       - Restaurants
       summary: Rate a restaurant
-      operationId: app.post_restaurant_rating
+      operationId: api.post_restaurant_rating
       parameters:
       - name: restaurant_id
         in: path
@@ -268,7 +268,7 @@ paths:
       tags:
       - Restaurants
       summary: Get restaurant tables
-      operationId: app.get_restaurant_tables
+      operationId: api.get_restaurant_tables
       parameters:
       - name: restaurant_id
         in: path
@@ -304,7 +304,7 @@ paths:
       tags:
       - Restaurants
       summary: Add a restaurant table
-      operationId: app.post_restaurant_table
+      operationId: api.post_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -347,7 +347,7 @@ paths:
       tags:
       - Restaurants
       summary: Get restaurant table
-      operationId: app.get_restaurant_table
+      operationId: api.get_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -378,7 +378,7 @@ paths:
       tags:
       - Restaurants
       summary: Edit a restaurant table
-      operationId: app.put_restaurant_table
+      operationId: api.put_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
@@ -432,7 +432,7 @@ paths:
       tags:
       - Restaurants
       summary: Delete a restaurant table
-      operationId: app.delete_restaurant_table
+      operationId: api.delete_restaurant_table
       parameters:
       - name: restaurant_id
         in: path
