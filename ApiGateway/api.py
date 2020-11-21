@@ -3,6 +3,7 @@ from flask import request, jsonify
 import ApiGateway.clients.bookings as bookings
 import ApiGateway.clients.users as users
 import ApiGateway.clients.notifications as notifications
+import ApiGateway.clients.restaurants as restaurants
 
 ################ USERS ################################################
 
@@ -114,39 +115,44 @@ def edit_notification(notification_id):
 ################ RESTAURANTS ################################################
 
 def get_restaurants(name=None, opening_time=None, open_day=None, cuisine_type=None, menu=None):
-    pass
+    return restaurants.get_restaurants(name, opening_time, open_day, cuisine_type, menu)
 
 def post_restaurants():
-    pass
+    json = request.json
+    return restaurants.post_restaurants(json)
 
 def get_restaurant(restaurant_id):
-    pass
+    return restaurants.get_restaurant(restaurant_id)
 
 def put_restaurant(restaurant_id):
-    pass
+    json = request.json
+    return restaurants.put_restaurant(restaurant_id,json)
 
 def delete_restaurant(restaurant_id):
-    pass
+    return restaurants.delete_restaurant(restaurant_id)
 
 def get_restaurant_rating(restaurant_id):
-    pass
+    return restaurants.get_restaurant_rating(restaurant_id)
 
 def post_restaurant_rating(restaurant_id):
-    pass
+    json = request.json
+    return restaurants.post_restaurant(restaurant_id,json)
 
 ################ TABLES ################################################
 
-def get_restaurant_tables(restaurant_id):
-    pass
+def get_restaurant_tables(restaurant_id,capacity=None):
+    return restaurants.get_restaurant_tables(restaurant_id,capacity)
 
 def post_restaurant_table(restaurant_id):
-    pass
+    json = request.json
+    return restaurants.post_restaurant_table(restaurant_id,json)
 
 def get_restaurant_table(restaurant_id, table_id):
-    pass
+    return restaurants.get_restaurant_table(restaurant_id,table_id)
 
 def put_restaurant_table(restaurant_id, table_id):
-    pass
+    json = request.json
+    return restaurants.put_restaurant_table(restaurant_id,table_id,json)
 
 def delete_restaurant_table(restaurant_id, table_id):
-    pass
+    return restaurants.delete_restaurant_table(restaurant_id,table_id)
