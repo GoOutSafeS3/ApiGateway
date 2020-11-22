@@ -95,7 +95,7 @@ paths:
   /restaurants/{restaurant_id}:
     get:
       tags:
-      - Restaurants
+      - Restaurant
       summary: Get a single restaurant
       operationId: api.get_restaurant
       parameters:
@@ -120,7 +120,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       tags:
-      - Restaurants
+      - Restaurant
       summary: Edit a restaurant
       operationId: api.put_restaurant
       parameters:
@@ -168,7 +168,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       tags:
-      - Restaurants
+      - Restaurant
       summary: Delete a restaurant
       operationId: api.delete_restaurant
       parameters:
@@ -202,7 +202,7 @@ paths:
   /restaurants/{restaurant_id}/rate:
     get:
       tags:
-      - Restaurants
+      - Restaurant
       summary: Get restaurant rating
       operationId: api.get_restaurant_rating
       parameters:
@@ -227,7 +227,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       tags:
-      - Restaurants
+      - Restaurant
       summary: Rate a restaurant
       operationId: api.post_restaurant_rating
       parameters:
@@ -266,7 +266,7 @@ paths:
   /restaurants/{restaurant_id}/tables:
     get:
       tags:
-      - Restaurants
+      - Tables
       summary: Get restaurant tables
       operationId: api.get_restaurant_tables
       parameters:
@@ -302,7 +302,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       tags:
-      - Restaurants
+      - Tables
       summary: Add a restaurant table
       operationId: api.post_restaurant_table
       parameters:
@@ -345,7 +345,7 @@ paths:
   /restaurants/{restaurant_id}/tables/{table_id}:
     get:
       tags:
-      - Restaurants
+      - Table
       summary: Get restaurant table
       operationId: api.get_restaurant_table
       parameters:
@@ -376,7 +376,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     put:
       tags:
-      - Restaurants
+      - Table
       summary: Edit a restaurant table
       operationId: api.put_restaurant_table
       parameters:
@@ -430,7 +430,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     delete:
       tags:
-      - Restaurants
+      - Table
       summary: Delete a restaurant table
       operationId: api.delete_restaurant_table
       parameters:
