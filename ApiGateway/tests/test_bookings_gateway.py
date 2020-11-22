@@ -33,7 +33,7 @@ class BookingsTests(unittest.TestCase):
         response = client.get('/bookings')
         js = response.get_json()
         self.assertEqual(response.status_code,200,msg=js)
-        self.assertEqual(len(js),6,msg=js)
+        self.assertEqual(len(js),8,msg=js)
 
         start = (datetime.datetime.now() - datetime.timedelta(days=7)).isoformat()
         end = (datetime.datetime.now() + datetime.timedelta(days=7)).isoformat()
@@ -62,7 +62,7 @@ class BookingsTests(unittest.TestCase):
         response = client.get('/bookings?with_user=true')
         js = response.get_json()
         self.assertEqual(response.status_code,200,msg=js)
-        self.assertEqual(len(js),6,msg=js)
+        self.assertEqual(len(js),8,msg=js)
         for b in js:
             self.assertEqual(b["user_id"],b["user"]["id"],msg=b)
 
