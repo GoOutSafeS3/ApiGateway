@@ -643,6 +643,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
           
     post: ########################## CREATE A NEW BOOKING
       tags:
@@ -711,6 +717,12 @@ paths:
                   - $ref: '#/components/schemas/BookingWithUser'
         404:
           description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Error during the process (try again)
           content:
             application/json:
               schema:

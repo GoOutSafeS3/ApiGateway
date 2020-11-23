@@ -37,23 +37,107 @@ def get_user_contacts(user_id, begin=None, end=None):
 
 
 def get_bookings(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None, with_user=False):
+    """ Return the list of bookings.
+
+    GET /bookings?[user=U_ID&][rest=R_ID&][table=T_ID&][begin=BEGING_DT&][end=END_DT&][begin_entrance=BEGING_ENT_DT&][end_entrance=END_ENT_DT&][with_user=true/false]
+
+    It's possible to filter the bookings thanks the query's parameters.
+    The parameters can be overlapped in any way.
+    All paramters are optional.
+
+    - user: All the booking of a specific user (by id)
+    - rest: All the booking of a specific restaurant (by id)
+    - table: All the booking of a specific table (by id)
+    - begin: All bookings from a certain date onwards (datetime ISO 8601 - Chapter 5.6)
+    - end: All bookings up to a certain date onwards (datetime ISO 8601 - Chapter 5.6)
+    - begin_entrance: All bookings from a certain entrance date onwards (datetime ISO 8601 - Chapter 5.6)
+    - end_entrance: All bookings up to a certain entrance date onwards (datetime ISO 8601 - Chapter 5.6)
+    - with_user: If true adds at each bookings the user information
+
+    If begin and not end is specified, all those starting from begin are taken. Same thing for end.
+
+    Status Codes:
+        200 - OK
+        400 - Wrong datetime format
+        500 - Error in communicating with the user service or problem with the database (try again)
+    """
     if with_user:
         return get_bookings_with_user_data(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
     return bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
 
 
 def new_booking():
+    """ Add a new booking.
+
+    POST /bookings
+    
+    Returns the booking if it can be made, otherwise returns an error message.
+
+    Requires a json object with:
+        - number_of_people: the number of people for the booking
+        - booking_datetime: the datetime of the booking
+        - user_id: the id of the user who made the booking
+        - restaurant_id: the id of the restaurant
+
+    Status Codes:
+        201 - The booking has been created
+        400 - Wrong datetime
+        409 - Impossible to change the booking (it is full, it is closed ...)
+        500 - Error in communicating with the restaurant service or problem with the database (try again)
+    """
     req = request.json
     return bookings.new_booking(user_id=req["user_id"], rest_id=req["restaurant_id"], number_of_people=req["number_of_people"], booking_datetime=req["booking_datetime"])
 
 
 def get_booking(booking_id, with_user=False):
+    """ Return a specific booking (request by id)
+
+    GET /bookings/{booking_id}?[with_user=true/false]
+
+    - with_user: [optional] If true adds the user information
+
+    Status Codes:
+        200 - OK
+        404 - Booking not found
+        500 - Error in communicating with the user service or problem with the database (try again)
+    """
     if with_user:
         return get_booking_with_user_data(booking_id=booking_id)
     return bookings.get_a_booking(booking_id)
 
 
 def put_booking(booking_id, entrance=False):
+    """ Edit a booking.
+
+    GET /bookings/{booking_id}?[entrance=true/false]
+
+    Changes the number of people and/or the date of the booking. 
+    Or marks the user's entry.
+
+    The request to mark the entrance is made through the query parameter entrance (a boolean)
+
+    Change requests are made through json objects with the following properties (both optional)
+        - booking_datetime: the new requested datetime
+        - number_of_people: the new requested number of people
+
+    If one of the two fields is not set, the one already entered is recovered.
+    If both are not entered the request is void (unless required to mark the entry()in this case the json is ignored).
+
+    If entry is marked, other requests for changes are ignored (if the user has already entered the changes no longer make sense).
+    Likewise, if the entry is marked, no more changes can be made.
+
+    The booking must not have already passed, in the event of a change.
+
+    Change of a booking may not always be possible (on the requested date there are no seats available, the restaurant is closed on that date ...)
+
+    Status Codes:
+        200 - OK
+        400 - Wrong datetime or bad request (entry already marked)
+        404 - Booking not found
+        409 - Impossible to change the booking
+        500 - Error in communicating with the restaurant service or problem with the database (try again)
+        """
+
     req = request.json
     if "number_of_people" not in req:
         req["number_of_people"] = None
@@ -63,10 +147,31 @@ def put_booking(booking_id, entrance=False):
 
 
 def delete_booking(booking_id):
+    """ Delete a booking specified by the id.
+
+    DELETE /bookings/{booking_id}
+    
+    Deletion is only possible if the booking has not yet passed.
+
+    Otherwise it remains stored (necessary for contact tracing)
+
+    Status Codes:
+        204 - Deleted
+        404 - Booking not found
+        403 - The booking cannot be deleted: it is a past reservation
+        500 - Error with the database
+    """
     return bookings.delete_booking(booking_id)
 
 
 def get_booking_with_user_data(booking_id):
+    """ Return a specific booking with user data.
+
+    Status Codes:
+        200 - OK
+        404 - Booking not found
+        500 - Error in communicating with the user service or problem with the database (try again)
+    """
     booking, booking_status_code = bookings.get_a_booking(booking_id)
     if booking_status_code != 200:
         return booking, booking_status_code
@@ -78,6 +183,27 @@ def get_booking_with_user_data(booking_id):
 
 
 def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, end=None, begin_entrance=None, end_entrance=None):
+    """ Return the list of bookings with user data.
+
+    It's possible to filter the bookings thanks the query's parameters.
+    The parameters can be overlapped in any way.
+    All paramters are optional.
+
+    - user: All the booking of a specific user (by id)
+    - rest: All the booking of a specific restaurant (by id)
+    - table: All the booking of a specific table (by id)
+    - begin: All bookings from a certain date onwards (datetime ISO 8601 - Chapter 5.6)
+    - end: All bookings up to a certain date onwards (datetime ISO 8601 - Chapter 5.6)
+    - begin_entrance: All bookings from a certain entrance date onwards (datetime ISO 8601 - Chapter 5.6)
+    - end_entrance: All bookings up to a certain entrance date onwards (datetime ISO 8601 - Chapter 5.6)
+
+    If begin and not end is specified, all those starting from begin are taken. Same thing for end.
+
+    Status Codes:
+        200 - OK
+        400 - Wrong datetime format
+        500 - Error in communicating with the user service or problem with the database (try again)
+    """
     bookings_list,bookings_status_code = bookings.get_bookings(user=user, rest=rest, table=table, begin=begin, end=end, begin_entrance=begin_entrance, end_entrance=end_entrance)
     if bookings_status_code != 200:
         return bookings_list,bookings_status_code
