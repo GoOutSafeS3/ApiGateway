@@ -91,26 +91,17 @@ def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, en
 
 ################ NOTIFICATIONS ################################################
 
-
 def get_notifications(user_id, read=None):
-    pass
-    #return notifications.get_notifications(user_id,read=read)
+    return notifications.get_notifications(user_id, read=read)
 
-
-def new_notification(user_id, body):
-    pass
-    #return notifications.create_notification(user_id, body)
-
+def new_notification(user_id):
+    return notifications.create_notification(user_id, request.json)
 
 def get_notification(notification_id):
-    pass
-    #return notifications.get_notification(notification_id)
-
+    return notifications.get_notification(notification_id)
 
 def edit_notification(notification_id):
-    pass
-    #return notifications.mark_notification_as_read(id=notification_id)
-
+    return notifications.edit_notification(notification_id, request.json)
 
 ################ RESTAURANTS ################################################
 
