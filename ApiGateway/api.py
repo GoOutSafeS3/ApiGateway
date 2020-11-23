@@ -220,8 +220,8 @@ def get_bookings_with_user_data(user=None, rest=None, table=None, begin=None, en
 def get_notifications(user_id, read=None):
     return notifications.get_notifications(user_id, read=read)
 
-def new_notification(user_id):
-    return notifications.create_notification(user_id, request.json)
+def new_notification():
+    return notifications.create_notification(request.json)
 
 def get_notification(notification_id):
     return notifications.get_notification(notification_id)

@@ -14,7 +14,7 @@ def get_notifications(user_id, read=None):
 
     return _get(url)
 
-def create_notification(user_id, data):
+def create_notification(data):
     url = f"{NOTIFICATIONS_SERVICE}/notifications"
     return _post(url, data)
 
