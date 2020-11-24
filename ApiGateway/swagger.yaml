@@ -878,7 +878,6 @@ paths:
       - in: query
         name: ssn
         description: User's SSN identifier
-        nullable: true
         schema:
           type: string
       - in: query
