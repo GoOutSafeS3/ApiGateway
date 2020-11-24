@@ -105,7 +105,7 @@ class RestaurantsTests(unittest.TestCase):
         response = client.get('/restaurants?name=Rest&opening_time=11&open_day=2&cuisine_type=cuisine&menu=menu')
         json = response.get_json()
         self.assertEqual(response.status_code,200,msg=json)
-        self.assertEqual(len(json),3,msg=json)
+        self.assertEqual(len(json),2,msg=json)
 
     def test_02_post_restaurants(self):
         client = self.app.test_client()
