@@ -1166,7 +1166,6 @@ components:
     User:
       type: object
       required:
-        - id
         - email
         - firstname
         - lastname
@@ -1177,7 +1176,6 @@ components:
         id:
           type: integer
           description: Unique User's identifier
-          readOnly: true
           example: 122
         rest_id:
           type: integer
