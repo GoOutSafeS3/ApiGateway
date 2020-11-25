@@ -43,15 +43,40 @@ def edit_user(user_id):
         if status != 200:
             return contacts, status
 
+        notifiedNew = []
+        notifiedOld = []
+        notifiedUser = []
         for contact in contacts:
-            result, status = notifications.create_notification({
-                "user_id": contact["id"],
-                "content": "You have had contact with a Covid-19 positive in the last 14 days",
-                "sent_on": datetime.now().isoformat()
-            })
-            if status != 200:
+            if "flag" in contact:
+                if contact["flag"] == "OP-OLD":
+                    if contact["id"] in notifiedOld:
+                        continue
+                    result, status = notifications.create_notification({
+                        "user_id": contact["id"],
+                        "content": "You have had a positive customer to Covid-19 in the last 14 days",
+                        "sent_on": datetime.now().isoformat()
+                    })
+                    notifiedOld.append(contact["id"])
+                elif contact["flag"] == "OP-FUTURE":
+                    if contact["id"] in notifiedNew:
+                        continue
+                    result, status = notifications.create_notification({
+                        "user_id": contact["id"],
+                        "content": "A positive user has reservation in your restaurant %s %s %s"%(old_user["firstname"],old_user["lastname"], old_user["email"]),
+                        "sent_on": datetime.now().isoformat()
+                    })
+                    notifiedNew.append(contact["id"])
+            else:
+                if contact["id"] in notifiedUser:
+                    continue
+                result, status = notifications.create_notification({
+                    "user_id": contact["id"],
+                    "content": "You have had contact with a Covid-19 positive in the last 14 days",
+                    "sent_on": datetime.now().isoformat()
+                })
+                notifiedUser.append(contact["id"])
+            if status != 201:
                 return result, status
-
     return result, status
 
 
