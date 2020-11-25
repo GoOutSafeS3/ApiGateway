@@ -11,7 +11,7 @@ def _get(url):
         r = requests.get(url, timeout=TIMEOUT)
         try:
             return r.json() ,r.status_code
-        except:
+        except: 
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",
@@ -37,7 +37,6 @@ def _post(url, json):
         try:
             return r.json(), r.status_code
         except Exception as e:
-            print(e)
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",
@@ -45,7 +44,6 @@ def _post(url, json):
                    "detail": "Unexpected error occurs",
                }, r.status_code
     except Exception as e:
-        print(e)
         return {
                    "type": "about:blank",
                    "title": "Internal Server Error",
@@ -63,7 +61,6 @@ def _put(url, json):
         try:
             return r.json() ,r.status_code
         except Exception as e:
-            print(e)
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",
@@ -87,14 +84,14 @@ def _patch(url,json):
         r = requests.patch(url, json=json, timeout=TIMEOUT)
         try:
             return r.json() ,r.status_code
-        except:
+        except: # pragma: no cover
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",
                    "status": r.status_code ,
                    "detail": "Unexpected error occurs",
                }, r.status_code  
-    except:
+    except: # pragma: no cover
         return {
                    "type": "about:blank",
                    "title": "Internal Server Error",
