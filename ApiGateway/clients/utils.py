@@ -26,7 +26,8 @@ def _get(url):
                    "detail": "Error during communication with other services",
                },500
 
-def _post(url,json):
+
+def _post(url, json):
     """ Makes a post request with a timeout.
 
     Returns the json object if with the status code (or None, None in case of timeout).
@@ -34,15 +35,17 @@ def _post(url,json):
     try:
         r = requests.post(url, json=json, timeout=TIMEOUT)
         try:
-            return r.json() ,r.status_code
-        except:
+            return r.json(), r.status_code
+        except Exception as e:
+            print(e)
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",
                    "status": r.status_code ,
                    "detail": "Unexpected error occurs",
-               }, r.status_code  
-    except:
+               }, r.status_code
+    except Exception as e:
+        print(e)
         return {
                    "type": "about:blank",
                    "title": "Internal Server Error",
@@ -50,7 +53,7 @@ def _post(url,json):
                    "detail": "Error during communication with other services",
                },500
 
-def _put(url,json):
+def _put(url, json):
     """ Makes a put request with a timeout.
 
     Returns the json object if with the status code (or None, None in case of timeout).
@@ -59,7 +62,8 @@ def _put(url,json):
         r = requests.put(url, json=json, timeout=TIMEOUT)
         try:
             return r.json() ,r.status_code
-        except:
+        except Exception as e:
+            print(e)
             return {
                    "type": "about:blank",
                    "title": "Unexpected Error",

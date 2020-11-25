@@ -1,6 +1,7 @@
 from ApiGateway.app import create_app
 import unittest
 import datetime
+from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class UsersTest(unittest.TestCase):
@@ -23,7 +24,7 @@ class UsersTest(unittest.TestCase):
         response = client.get('/users?is_positive=True')
         resp_json = response.get_json()
         self.assertEqual(response.status_code, 200, msg=resp_json)
-        user = client.get('users/11')
+        user = client.get('users/13')
         user_json = user.get_json()
         self.assertDictEqual(resp_json[0], user_json)
 
@@ -59,7 +60,6 @@ class UsersTest(unittest.TestCase):
             "email": "eleonora@example.com",
             "firstname": "Eleonora",
             'password':'eleonora',
-            'password_repeat': 'eleonora',
             "is_admin": False,
             "is_health_authority": False,
             "is_operator": False,
@@ -77,21 +77,19 @@ class UsersTest(unittest.TestCase):
     def test_edit_user(self):
         client = self.app.test_client()
         user_modify = {
-            "email": "eleonora@example.com",
-            "firstname": "Eleonora",
-            'password': 'eleonora',
-            'password_repeat': 'eleonora',
-            'old_password':'eleonora',
+            "email": "daniele@example.com",
+            "firstname": "Daniele",
+            'password': generate_password_hash('daniele'),
             "is_admin": False,
             "is_health_authority": False,
             "is_operator": False,
-            "is_positive": True,
+            "is_positive": False,
             "lastname": "Corridori",
             "phone": "0934523345",
             "dateofbirth": datetime.datetime.today() - datetime.timedelta(weeks=1400, days=21),
             "ssn": 'LNRCRRDR34H54H78'
         }
-        response = client.put('users/12',json=user_modify)
+        response = client.put('users/2',json=user_modify)
         self.assertEqual(response.status_code, 200)
 
     def test_user_contacts(self):
@@ -100,4 +98,21 @@ class UsersTest(unittest.TestCase):
         user = client.get('users/3')
         self.assertEqual(response.status_code, 200)
 
-    # Aggiungere test sulla delete appena pronte api su ristoranti
+    def test_new_user(self):
+        client = self.app.test_client()
+        user_new = {
+            "email": "laura@example.com",
+            "firstname": "Laura",
+            'password': 'laura',
+            "is_admin": False,
+            "is_health_authority": False,
+            "is_operator": False,
+            "is_positive": False,
+            "lastname": "Benni",
+            "phone": "4696124",
+            "dateofbirth": datetime.datetime.today() - datetime.timedelta(weeks=1400, days=21)
+        }
+        response = client.post('/users', json=user_new)
+        self.assertEqual(response.status_code, 200)
+        response = client.get('/users?email=laura@example.com')
+        self.assertEqual(response.status_code, 200)
