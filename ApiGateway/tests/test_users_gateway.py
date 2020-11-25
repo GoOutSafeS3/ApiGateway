@@ -12,7 +12,7 @@ class UsersTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
+    
     def test_get_users(self):
         client = self.app.test_client()
         response = client.get('/users')
@@ -53,7 +53,7 @@ class UsersTest(unittest.TestCase):
           "ssn": None
         }
         self.assertDictContainsSubset(user_1,response.get_json())
-
+    
     def test_create_user(self):
         client = self.app.test_client()
         user_new = {
@@ -70,10 +70,10 @@ class UsersTest(unittest.TestCase):
             "ssn": 'LNRCRRDR34H54H78'
         }
         response = client.post('/users', json=user_new)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201, msg=response.get_json())
         response = client.get('/users?email=eleonora@example.com')
-        self.assertEqual(response.status_code, 200)
-
+        self.assertEqual(response.status_code, 200, msg=response.get_json())
+    
     def test_edit_user(self):
         client = self.app.test_client()
         user_modify = {
@@ -87,17 +87,17 @@ class UsersTest(unittest.TestCase):
             "lastname": "Corridori",
             "phone": "0934523345",
             "dateofbirth": datetime.datetime.today() - datetime.timedelta(weeks=1400, days=21),
-            "ssn": 'LNRCRRDR34H54H78'
+            "ssn": 'LNRCRRDR34H54H70'
         }
         response = client.put('users/2',json=user_modify)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200, msg=response.get_json())
 
     def test_user_contacts(self):
         client = self.app.test_client()
         response = client.get('users/2/contacts')
         user = client.get('users/3')
-        self.assertEqual(response.status_code, 200)
-
+        self.assertEqual(response.status_code, 200, msg=response.get_json())
+    
     def test_new_user(self):
         client = self.app.test_client()
         user_new = {
@@ -110,9 +110,9 @@ class UsersTest(unittest.TestCase):
             "is_positive": False,
             "lastname": "Benni",
             "phone": "4696124",
-            "dateofbirth": datetime.datetime.today() - datetime.timedelta(weeks=1400, days=21)
+            "dateofbirth": datetime.datetime.today() - datetime.timedelta(weeks=1400, days=21),
         }
         response = client.post('/users', json=user_new)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201, msg=response.get_json())
         response = client.get('/users?email=laura@example.com')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200, msg=response.get_json())
