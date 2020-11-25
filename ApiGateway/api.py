@@ -1,4 +1,6 @@
 from flask import request, jsonify
+from datetime import datetime, timedelta
+from dateutil import parser
 
 import ApiGateway.clients.bookings as bookings
 import ApiGateway.clients.users as users
@@ -23,7 +25,34 @@ def get_id_user(user_id):
 
 def edit_user(user_id):
     dict_user = request.json
-    return users.edit_user(user_id,dict_user)
+    old_user, status = users.get_user(user_id)
+    
+    if status != 200:
+        return old_user, status
+    
+    result, status = users.edit_user(user_id, dict_user)
+
+    if status != 200:
+        return result, status
+
+    if not old_user['is_positive'] and result['is_positive']:
+        end = parser.parse(dict_user['positive_datetime'])
+        begin = end - timedelta(days = 14)
+        contacts, status = users.get_user_contacts(user_id, begin.isoformat(), end.isoformat())
+
+        if status != 200:
+            return contacts, status
+
+        for contact in contacts:
+            result, status = notifications.create_notification({
+                "user_id": contact["id"],
+                "content": "You have had contact with a Covid-19 positive in the last 14 days",
+                "sent_on": datetime.now().isoformat()
+            })
+            if status != 200:
+                return result, status
+
+    return result, status
 
 
 def delete_user(user_id):

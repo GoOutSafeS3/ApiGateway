@@ -6,3 +6,4 @@ coverage
 requests_mock
 pytest-cov
 requests
+python-dateutil
